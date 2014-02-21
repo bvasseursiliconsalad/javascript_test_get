@@ -22,9 +22,11 @@
     }
     
     document.addEventListener("DOMContentLoaded", function (event) {
-        var url = 'test.json';
+        var local_url = 'test.json',
+            github_url = 'https://api.github.com/users/siliconsalad',
+            idDomResultSameDomain = 'result_same_domain';
 
-        function sendRequest() {
+        function sendRequest(url, idDomResult) {
             var xhr;
             console.log("prepare to send a request");
             
@@ -48,7 +50,7 @@
                     console.info('response = ' + xhr.responseText);
                     var response = JSON.parse(xhr.responseText);
                     console.log('name = ' + response.name);
-                    document.getElementById("result").innerHTML = xhr.responseText;
+                    document.getElementById("result_same_domain").innerHTML = xhr.responseText;
                 } else if (xhr.readyState === xhr.DONE && xhr.status !== 200) {
                     console.error('Erreur : ' + 'Code = ' + xhr.status + ' texte = ' + xhr.statusText);
                 }
@@ -56,7 +58,8 @@
             xhr.send(null);
         }
 
-        document.getElementById("requete").addEventListener("click", sendRequest);
+        document.getElementById("requete_same_domain").addEventListener("click", sendRequest(local_url, idDomResultSameDomain));
+        document.getElementById("test").addEventListener("click", console.log("click"));
     });
 
 	

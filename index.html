@@ -4,20 +4,26 @@
 <head>
 	<meta charset="utf-8">
 	<title>Test javascript</title>
-    <!--[if IE 8]><script src="EventListener/EventListener.js"></script><!--<![endif]-->
     <!--[if lt IE 8]>
-        <script src="EventListener/EventListener.oldie.js"></script>
         <script src="JSON-js/json2.js"></script>
     <!--<![endif]-->
     <script type="text/javascript" src="script.js"></script>
 </head>
 <body>
-
-	<div id="requete">
-		<h1>Petit test pour requête</h1>
-		<p>Il faut cliquer sur le paragraphe ou sur le titre pour lancer une requête GET.</p>
+<h1 id="test">Test Reqêtes</h1>
+	<div id="requete_same_domain">
+		<h2>Same domain : Petit test pour requête</h2>
+		<p>Il faut cliquer sur le paragraphe ou sur le titre pour lancer une requête GET vers un fichier local.</p>
 	</div>
-<div id="result"></div>
+<h2>Result Same Domaine</h2>
+<div id="result_same_domain"></div>
+    
+<div id="requete_github">
+    <h2>Github request : test pour une requete cross-domain</h2>
+    <p>Cliquez pour envoyer une requête vers Github (https://api.github.com/users/siliconsalad)</p>
+    <p>Ou vers webPuzzle (http://webpuzzlews.herokuapp.com/web_components/AngularJsWc.json) si IE (ne supporte pas de passer de http vers https)</p>
+</div>
+<div id="result_github"></div>
 </body>
 
 </html>

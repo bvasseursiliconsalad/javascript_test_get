@@ -45,7 +45,7 @@
         xdr.send();
     }
     
-    function sendRequest(url, idDomResult) {
+    function sendRequest(url, method, idDomResult) {
         var xhr;
         console.log("prepare to send a request");
 
@@ -61,7 +61,7 @@
             }
         }
 
-        xhr.open('GET', url);
+        xhr.open(method, url);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 console.log('request done :)');
@@ -79,11 +79,16 @@
     function initApp() {
         var local_url = 'test.json',
             webPuzzleUrl = 'http://webpuzzlews.herokuapp.com/web_components/AngularJsWc.json',
-            github_url = 'https://api.github.com/users/siliconsalad',
+            prediction_url = 'http://localhost:8000',
+            apiKey = 'UXQDfSgRBZIVjZ0yUaWoPUeRw0THKcsrHNUXNcPEluQto2ATjQeCNrWxS7X5diyy',
             idDomResultSameDomain = 'result_same_domain',
             idDomResultGithub = 'result_github',
+            idDomResultPrediction = 'result_prediction',
             domElementSameDomain = document.getElementById('requete_same_domain'),
-            domElementGitHub = document.getElementById('requete_github');
+            domElementGitHub = document.getElementById('requete_github'),
+            domButton = document.getElementById('submit'),
+            domId = document.getElementById('id'),
+            domValue = document.getElementById('value');
         
         if (!domElementSameDomain.addEventListener) {
             domElementSameDomain.attachEvent('onclick', function () {
@@ -104,10 +109,15 @@
                 if (window.hasOwnProperty('XDomainRequest') && window.XDomainRequest !== null) {
                     ieSendRequestCrossDomain(webPuzzleUrl, idDomResultGithub);
                 } else {
-                    sendRequest(github_url, idDomResultGithub);
+                    var url = prediction_url + '/users/1.json?pio_appkey=' + apiKey;
+                    sendRequest(url, 'GET', idDomResultGithub);
                 }
             });
         }
+        domButton.addEventListener('click', function () {
+            var url = prediction_url + '/users.json?pio_appkey=' + apiKey + '&pio_uid=' + domId.value + '&name=' + domValue.value;
+            sendRequest(url, 'POST', idDomResultPrediction);
+        });
     }
     
     document.onreadystatechange = function () {

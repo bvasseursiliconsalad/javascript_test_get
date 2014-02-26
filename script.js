@@ -22,9 +22,9 @@
         }
     }
     
-    function ieSendRequestCrossDomain(url, idDomResult) {
+    function ieSendRequestCrossDomain(url, method, idDomResult) {
         var xdr = new XDomainRequest();
-        xdr.open('get', url);
+        xdr.open(method, url);
         xdr.onload = function () {
             console.log('XDR onlaod');
             console.log('request done :)');
@@ -78,9 +78,12 @@
     
     function initApp() {
         var local_url = 'test.json',
+            ip = 'http://192.168.1.164:8001',
             webPuzzleUrl = 'http://webpuzzlews.herokuapp.com/web_components/AngularJsWc.json',
-            prediction_url = 'http://localhost:8000',
-            apiKey = 'UXQDfSgRBZIVjZ0yUaWoPUeRw0THKcsrHNUXNcPEluQto2ATjQeCNrWxS7X5diyy',
+            prediction_url = 'http://localhost:8001',
+            apiKey = 'K4aQLzy04JS9ao22FEDlmlDGEsaog0NLDsnfi4WHCT46VQcNJDNGNfTDoiZQYZL3',
+            local_prediction_url = prediction_url + '/users/1.json?pio_appkey=' + apiKey,
+            vm_prediction_url = ip + '/users/1.json?pio_appkey=' + apiKey,
             idDomResultSameDomain = 'result_same_domain',
             idDomResultGithub = 'result_github',
             idDomResultPrediction = 'result_prediction',
@@ -92,32 +95,39 @@
         
         if (!domElementSameDomain.addEventListener) {
             domElementSameDomain.attachEvent('onclick', function () {
-                sendRequest(local_url, idDomResultSameDomain);
+                sendRequest(local_url, 'GET', idDomResultSameDomain);
             });
         } else {
             domElementSameDomain.addEventListener("click", function () {
-                sendRequest(local_url, idDomResultSameDomain);
+                sendRequest(local_url, 'GET', idDomResultSameDomain);
             });
         }
         
         if (!domElementGitHub.addEventListener) {
             domElementGitHub.attachEvent('onclick', function () {
-                ieSendRequestCrossDomain(webPuzzleUrl, idDomResultGithub);
+                ieSendRequestCrossDomain(vm_prediction_url, 'GET', idDomResultGithub);
             });
         } else {
             domElementGitHub.addEventListener('click', function () {
                 if (window.hasOwnProperty('XDomainRequest') && window.XDomainRequest !== null) {
-                    ieSendRequestCrossDomain(webPuzzleUrl, idDomResultGithub);
+                    ieSendRequestCrossDomain(vm_prediction_url, 'GET', idDomResultGithub);
                 } else {
-                    var url = prediction_url + '/users/1.json?pio_appkey=' + apiKey;
-                    sendRequest(url, 'GET', idDomResultGithub);
+                    sendRequest(vm_prediction_url, 'GET', idDomResultGithub);
                 }
             });
         }
-        domButton.addEventListener('click', function () {
-            var url = prediction_url + '/users.json?pio_appkey=' + apiKey + '&pio_uid=' + domId.value + '&name=' + domValue.value;
-            sendRequest(url, 'POST', idDomResultPrediction);
-        });
+        
+        if (!domButton.addEventListener) {
+            domButton.attachEvent('onclick', function () {
+                var url = ip + '/users.json?pio_appkey=' + apiKey + '&pio_uid=' + domId.value + '&name=' + domValue.value;
+                ieSendRequestCrossDomain(url, 'POST', idDomResultPrediction);
+            });
+        } else {
+            domButton.addEventListener('click', function () {
+                var url = prediction_url + '/users.json?pio_appkey=' + apiKey + '&pio_uid=' + domId.value + '&name=' + domValue.value;
+                sendRequest(url, 'POST', idDomResultPrediction);
+            });
+        }
     }
     
     document.onreadystatechange = function () {
